@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: keda-teste
+  name: keda-teste-job
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: keda-teste
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: keda-teste
+    spec:
+      containers:
+        - image: 540373670534.dkr.ecr.us-east-1.amazonaws.com/keda-teste:3.0.0
+          name: keda-teste
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: aws-sqs-queue-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: keda-teste-job
+  minReplicaCount: 0
+  maxReplicaCount: 3
+  pollingInterval: 5
+  triggers:
+    - type: aws-sqs-queue
+      metadata:
+        queueURL: https://sqs.us-east-1.amazonaws.com/540373670534/sqs-keda-teste
+        queueLength: "1"
+        awsRegion: "us-east-1"
+        identityOwner: operator
+        scaleOnInFlight: "false"

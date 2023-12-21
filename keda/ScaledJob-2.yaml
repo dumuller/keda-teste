@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: keda-teste
+  name: keda-teste-job
+spec:
+  replicas: 0
+  selector:
+    matchLabels:
+      app: keda-teste
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: keda-teste
+    spec:
+      containers:
+        - image: 540373670534.dkr.ecr.us-east-1.amazonaws.com/keda-teste:3.0.0
+          name: keda-teste
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledJob
+metadata:
+  name: keda-teste-job
+spec:
+  jobTargetRef:
+    parallelism: 1
+    completions: 1
+    activeDeadlineSeconds: 60
+    backoffLimit: 0
+    template:
+      spec:
+        containers:
+          - name: keda-teste
+            image: 540373670534.dkr.ecr.us-east-1.amazonaws.com/keda-teste:3.0.0
+            imagePullPolicy: Always
+        restartPolicy: Never
+  pollingInterval: 5  # Intervalo de tempo em segundos para verificar o trigger
+  successfulJobsHistoryLimit: 0  # Número de Jobs bem-sucedidos a serem mantidos no histórico
+  failedJobsHistoryLimit: 1 # Número de Jobs MAL-sucedidos a serem mantidos no histórico
+  maxReplicaCount: 3 # Número máximo de replicas que executarão em paralelo
+  minReplicaCount: 0
+  triggers:
+    - type: aws-sqs-queue
+      metadata:
+        queueUrl: https://sqs.us-east-1.amazonaws.com/540373670534/sqs-keda-teste
+        awsRegion: 'us-east-1'
+        queueLength: "1"  # Número de mensagens para escalar
+        scaleOnInFlight: "false" #false para não incluir mensagens em trânsito
+        identityOwner: operator

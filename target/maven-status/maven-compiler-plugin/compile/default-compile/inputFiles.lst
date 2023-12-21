@@ -1,0 +1,5 @@
+/home/eduardomuller/Projetos/keda-teste/src/main/java/com/muller/kedateste/config/model/Message.java
+/home/eduardomuller/Projetos/keda-teste/src/main/java/com/muller/kedateste/config/aws/AwsConfig.java
+/home/eduardomuller/Projetos/keda-teste/src/main/java/com/muller/kedateste/config/listener/MessageReceiver.java
+/home/eduardomuller/Projetos/keda-teste/src/main/java/com/muller/kedateste/config/listener/SqsMessageListener.java
+/home/eduardomuller/Projetos/keda-teste/src/main/java/com/muller/kedateste/KedaTesteApplication.java

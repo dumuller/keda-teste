@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keda-teste
+spec:
+  containers:
+    - name: keda-teste
+      image: 540373670534.dkr.ecr.us-east-2.amazonaws.com/keda-teste:2.0.0
+      imagePullPolicy: Always
+      ports:
+        - containerPort: 8080
+  triggers:
+    - type: aws-sqs-queue
+      metadata:
+        queueURL: https://sqs.us-east-2.amazonaws.com/540373670534/sqs-inicio-processo
+        queueLength: "1"
+        awsRegion: us-east-2
+        identityOwner: pod
+        scaleOnInFlight: "false"
+      authenticationRef:
+        name: keda-trigger-auth-aws-credentials

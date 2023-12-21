@@ -1,0 +1,5 @@
+com/muller/kedateste/config/listener/MessageReceiver.class
+com/muller/kedateste/config/aws/AwsConfig.class
+com/muller/kedateste/config/listener/SqsMessageListener.class
+com/muller/kedateste/config/model/Message.class
+com/muller/kedateste/KedaTesteApplication.class
